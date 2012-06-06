@@ -1,0 +1,69 @@
+﻿<UserControl x:Class="TaxiTaxiWPF.TaxiControls.Statistiken"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:TaxiData="clr-namespace:TaxiTaxiWPF.TaxiData"
+             xmlns:chartingToolkit="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
+             mc:Ignorable="d"
+             
+             d:DesignHeight="378" d:DesignWidth="652">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="2*" />
+        </Grid.ColumnDefinitions>
+        <StackPanel>
+            <DataGrid ItemsSource="{Binding Jahresstatistik}" AutoGenerateColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Jahr" Binding="{Binding Key, Mode=OneWay, StringFormat='yyyy'}" />
+                    <DataGridTextColumn Header="Stunden" Binding="{Binding Stunden, Mode=OneWay, StringFormat='g'}" />
+                    <DataGridTextColumn Header="Verdienst" Binding="{Binding Verdienst, Mode=OneWay, StringFormat='c'}" />
+                    <DataGridTextColumn Header="Verdienst/h" Binding="{Binding VerdienstProStunde, Mode=OneWay, StringFormat='c'}" />
+                </DataGrid.Columns>
+            </DataGrid>
+            <DataGrid ItemsSource="{Binding Monatsstatistik}" AutoGenerateColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Monat" Binding="{Binding Key, Mode=OneWay, StringFormat='MMMM yyyy'}" />
+                    <DataGridTextColumn Header="Stunden" Binding="{Binding Stunden, Mode=OneWay, StringFormat='g'}" />
+                    <DataGridTextColumn Header="Verdienst" Binding="{Binding Verdienst, Mode=OneWay, StringFormat='c'}" />
+                    <DataGridTextColumn Header="Verdienst/h" Binding="{Binding VerdienstProStunde, Mode=OneWay, StringFormat='c'}" />
+                </DataGrid.Columns>
+            </DataGrid>
+            <DataGrid ItemsSource="{Binding Wochenstatistik}" AutoGenerateColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="KW" Binding="{Binding Key, Converter={TaxiData:DatumWocheConverter}, Mode=OneWay, StringFormat='g'}" />
+                    <DataGridTextColumn Header="Jahr" Binding="{Binding Key, Mode=OneWay, StringFormat='yyyy'}" />
+                    <DataGridTextColumn Header="Stunden" Binding="{Binding Stunden, Mode=OneWay, StringFormat='g'}" />
+                    <DataGridTextColumn Header="Verdienst" Binding="{Binding Verdienst, Mode=OneWay, StringFormat='c'}" />
+                    <DataGridTextColumn Header="Verdienst/h" Binding="{Binding VerdienstProStunde, Mode=OneWay, StringFormat='c'}" />
+                    <DataGridTextColumn Header="Bemerkung" Binding="{Binding Bemerkung}" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
+        <chartingToolkit:Chart Grid.Column="99" Title="Arbeitszeit">
+            <chartingToolkit:Chart.Resources>
+                <Style TargetType="chartingToolkit:AxisLabel" x:Key="BetragAchse">
+                    <Setter Property="StringFormat" Value="{}{0:c}" />
+                </Style>
+                <Style TargetType="chartingToolkit:AxisLabel" x:Key="ZeitAchse">
+                    <Setter Property="StringFormat" Value="{}{0:g}h" />
+                </Style>
+                <Style TargetType="chartingToolkit:AxisLabel" x:Key="MonatAchse">
+                    <Setter Property="StringFormat" Value="{}{0:MMM yyyy}" />
+                </Style>
+            </chartingToolkit:Chart.Resources>
+            <chartingToolkit:LineSeries ItemsSource="{Binding Wochenstatistik}" DependentValuePath="Stunden" IndependentValuePath="Key"  Title="h/Woche">
+            </chartingToolkit:LineSeries>
+            <chartingToolkit:LineSeries ItemsSource="{Binding Monatsstatistik}" DependentValuePath="Stunden" IndependentValuePath="Key"  Title="h/Monat">
+                <chartingToolkit:LineSeries.IndependentAxis>
+                    <chartingToolkit:DateTimeAxis IntervalType="Months" Interval="1" ShowGridLines="True" Orientation="X" VerticalAlignment="Bottom" AxisLabelStyle="{StaticResource MonatAchse}" Title="Monat">
+                    </chartingToolkit:DateTimeAxis>
+                </chartingToolkit:LineSeries.IndependentAxis>
+                <chartingToolkit:LineSeries.DependentRangeAxis>
+                    <chartingToolkit:LinearAxis Interval="6" ShowGridLines="True" Orientation="Y" AxisLabelStyle="{StaticResource ZeitAchse}" Minimum="0" Maximum="66" Title="Stunden" />
+                </chartingToolkit:LineSeries.DependentRangeAxis>
+            </chartingToolkit:LineSeries>
+        </chartingToolkit:Chart>
+    </Grid>
+</UserControl>

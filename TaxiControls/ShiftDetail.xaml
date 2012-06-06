@@ -1,0 +1,99 @@
+﻿<UserControl x:Class="TaxiTaxiWPF.TaxiControls.ShiftDetail"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:ext="clr-namespace:Xceed.Wpf.Toolkit;assembly=WPFToolkit.Extended"
+             xmlns:txctl="clr-namespace:TaxiTaxiWPF.TaxiControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="563" d:DesignWidth="679">
+    <Grid>
+        <DockPanel>
+            <DockPanel DockPanel.Dock="Top">
+                <TabControl Height="140" DockPanel.Dock="Top">
+                    <TabItem Header="Abrechnung">
+                        <StackPanel Orientation="Vertical">
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel Orientation="Vertical" Width="150">
+                                    <Label Content="Abzählen" FontSize="12" FontWeight="Bold" />
+                                    <Label Content="{Binding Abzaehlen}" ContentStringFormat="c" FontSize="16" FontWeight="Bold" />
+                                </StackPanel>
+                                <StackPanel Orientation="Vertical" Width="150">
+                                    <Label Content="Eigener Verdienst" FontSize="12" FontWeight="Bold" />
+                                    <Label Content="{Binding EigenerVerdienst}" ContentStringFormat="c" FontSize="16" FontWeight="Bold" />
+                                </StackPanel>
+                            </StackPanel>
+                            <StackPanel Visibility="Collapsed" Orientation="Horizontal">
+                                <StackPanel Orientation="Vertical">
+                                    <Label Content="Ges. Sonderausg." />
+                                    <Label Content="{Binding SonderausgabenSumme}" ContentStringFormat="c" />
+                                </StackPanel>
+                            </StackPanel>
+                        </StackPanel>
+                    </TabItem>
+                    <TabItem Header="Daten">
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel Orientation="Vertical">
+                                <Label Content="Von... bis" />
+                                <StackPanel Orientation="Horizontal">
+                                    <DatePicker SelectedDate="{Binding Anfang}" />
+                                    <ext:TimePicker Value="{Binding Anfang}" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <DatePicker SelectedDate="{Binding Ende}" />
+                                    <ext:TimePicker Value="{Binding Ende}" />
+                                </StackPanel>
+                            </StackPanel>
+                        </StackPanel>
+                    </TabItem>
+                    <TabItem Header="Geld">
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel>
+                                <Label Content="Vorher" />
+                                <TextBox Text="{Binding GeldVorher, StringFormat='c'}" />
+                            </StackPanel>
+                            <StackPanel>
+                                <Label Content="Nachher" />
+                                <TextBox Text="{Binding GeldNachher, StringFormat='c'}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </TabItem>
+                    <TabItem Header="Sonderausgaben" Visibility="Collapsed">
+                        <Grid>
+                            <DataGrid Margin="10" ItemsSource="{Binding Sonderausgaben}" />
+                        </Grid>
+                    </TabItem>
+                    <TabItem Header="Private Ausgaben" Visibility="Collapsed">
+                        <Grid>
+                            <DataGrid Margin="10" ItemsSource="{Binding Privateausgaben}" />
+                        </Grid>
+                    </TabItem>
+                </TabControl>
+                <Separator DockPanel.Dock="Top" Height="3" Margin="8" />
+                <ToolBarTray DockPanel.Dock="Top">
+                    <ToolBar>
+                        <Button Click="Button_Click_1" ToolTip="Fahrzeug hinzufügen">
+                            <Image Source="..\Images\1338809739_001_01.png" Width="16" />
+                        </Button>
+                        <Button Content="Löschen" Visibility="Collapsed"/>
+                    </ToolBar>
+                </ToolBarTray>
+                <DataGrid ItemsSource="{Binding Fahrzeuge}" HeadersVisibility="Column" AutoGenerateColumns="False" DockPanel.Dock="Top" x:Name="selectedVehicle">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding Nummer, StringFormat='g', UpdateSourceTrigger=LostFocus}" Header="Nr." />
+                        <DataGridTextColumn Binding="{Binding TotalAnfang, StringFormat='f1', UpdateSourceTrigger=LostFocus}" Header="Total Anfang" />
+                        <DataGridTextColumn Binding="{Binding TotalEnde, StringFormat='f1', UpdateSourceTrigger=LostFocus}" Header="Total Ende" />
+                        <DataGridTextColumn Binding="{Binding BesetztAnfang, StringFormat='f1', UpdateSourceTrigger=LostFocus}" Header="Besetzt Anfang" />
+                        <DataGridTextColumn Binding="{Binding BesetztEnde, StringFormat='f1', UpdateSourceTrigger=LostFocus}" Header="Besetzt Ende" />
+                        <DataGridTextColumn Binding="{Binding TourenAnfang, StringFormat='g', UpdateSourceTrigger=LostFocus}" Header="Touren Anfang" />
+                        <DataGridTextColumn Binding="{Binding TourenEnde, StringFormat='g', UpdateSourceTrigger=LostFocus}" Header="Touren Ende" />
+                        <DataGridTextColumn Binding="{Binding PreisAnfang, StringFormat='c', UpdateSourceTrigger=LostFocus}" Header="Preis Anfang" />
+                        <DataGridTextColumn Binding="{Binding PreisEnde, StringFormat='c', UpdateSourceTrigger=LostFocus}" Header="Preis Ende" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+            <Separator DockPanel.Dock="Top" Height="3" Margin="8" />
+            <txctl:FahrzeugDetails DataContext="{Binding SelectedItem, ElementName=selectedVehicle}" />
+        </DockPanel>
+    </Grid>
+</UserControl>

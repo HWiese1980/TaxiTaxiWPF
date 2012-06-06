@@ -1,0 +1,91 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TaxiTaxiWPF.TaxiControls"
+             xmlns:AbrechnungConverter="clr-namespace:TaxiTaxiWPF.AbrechnungConverter"
+             x:Class="TaxiTaxiWPF.TaxiControls.Abrechnung" 
+             mc:Ignorable="d" 
+             d:DesignHeight="557.333" d:DesignWidth="1207.667">
+    <Grid>
+        <Grid.Resources>
+            <Style TargetType="DataGridCell" x:Key="CellAlignRight">
+                <Setter Property="TextBlock.TextAlignment" Value="Right" />
+            </Style>
+        </Grid.Resources>
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+            <Grid IsHitTestVisible="False">
+                <Grid.Resources>
+                    <Style TargetType="Label">
+                        <Setter Property="Opacity" Value="0.7" />
+                        <Setter Property="Foreground" Value="{DynamicResource AbrechnungFarbe}" />
+                        <Setter Property="FontSize" Value="12" />
+                        <Setter Property="FontWeight" Value="Bold" />
+                        <Setter Property="HorizontalAlignment" Value="Left" />
+                        <Setter Property="VerticalAlignment" Value="Top" />
+                        <Setter Property="VerticalContentAlignment" Value="Bottom" />
+                        <Setter Property="Height" Value="25" />
+                        <Setter Property="Width" Value="117" />
+                        <Setter Property="ClipToBounds" Value="False" />
+                    </Style>
+                </Grid.Resources>
+                <Image Source="..\Images\abrechnung.jpg" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
+                <Grid Margin="84,22,1166,665">
+                    <Label Content="{Binding Converter={AbrechnungConverter:Wagen}}" HorizontalContentAlignment="Center" Width="117" />
+                    <Label Content="{Binding Converter={AbrechnungConverter:Datum}}" Margin="177,0,0,0" HorizontalContentAlignment="Center" Width="111" />
+                    <Label Content="{Binding Converter={AbrechnungConverter:UhrWert Eigenschaft=TotalEnde}}" Margin="0,65,0,0" HorizontalContentAlignment="Right" />
+                    <Label Content="{Binding Converter={AbrechnungConverter:UhrWert Eigenschaft=TotalAnfang}}" Margin="0,87,0,0" HorizontalContentAlignment="Right" />
+                    <Label Content="{Binding Converter={AbrechnungConverter:UhrWert Eigenschaft=TotalTotal}}" Margin="0,109,0,0" HorizontalContentAlignment="Right" />
+                    <Label Content="{Binding Converter={AbrechnungConverter:UhrWert Eigenschaft=BesetztEnde}}" Margin="0,175,0,0" HorizontalContentAlignment="Right" />
+                    <Label Content="{Binding Converter={AbrechnungConverter:UhrWert Eigenschaft=BesetztAnfang}}" Margin="0,197,0,0" HorizontalContentAlignment="Right" />
+                    <Label Content="{Binding Converter={AbrechnungConverter:UhrWert Eigenschaft=BesetztTotal}}" Margin="0,219,0,0" HorizontalContentAlignment="Right" />
+                    <Label Content="{Binding Converter={AbrechnungConverter:UhrWert Eigenschaft=Besetzt2x}}" Margin="149,219,0,0" HorizontalContentAlignment="Right" Width="75" />
+                    <Label Content="{Binding Converter={AbrechnungConverter:UhrWert Eigenschaft=TourenEnde}}" ContentStringFormat="g" Margin="0,285,0,0" HorizontalContentAlignment="Right" />
+                    <Label Content="{Binding Converter={AbrechnungConverter:UhrWert Eigenschaft=TourenAnfang}}" ContentStringFormat="g" Margin="0,307,0,0" HorizontalContentAlignment="Right" />
+                    <Label Content="{Binding Converter={AbrechnungConverter:UhrWert Eigenschaft=TourenTotal}}" ContentStringFormat="g" Margin="0,329,0,0" HorizontalContentAlignment="Right" />
+                    <Label Content="{Binding Converter={AbrechnungConverter:UhrWert Eigenschaft=PreisEnde, Format='{}{0:c}'}}" ContentStringFormat="c" Margin="0,395,0,0" HorizontalContentAlignment="Right" />
+                    <Label Content="{Binding Converter={AbrechnungConverter:UhrWert Eigenschaft=PreisAnfang, Format='{}{0:c}'}}" ContentStringFormat="c" Margin="0,417,0,0" HorizontalContentAlignment="Right" />
+                    <Label Content="{Binding Converter={AbrechnungConverter:UhrWert Eigenschaft=PreisTotal, Format='{}{0:c}'}}" ContentStringFormat="c" Margin="0,439,0,0" HorizontalContentAlignment="Right" />
+                </Grid>
+                <Grid Margin="418,22,770,651">
+                    <Label Content="{Binding Converter={AbrechnungConverter:Wagen}}" Margin="54,0,0,0" HorizontalContentAlignment="Center" Width="117" />
+                    <Label Content="{Binding Stunden}" Margin="202,51,0,0" HorizontalContentAlignment="Right" Width="97" />
+                    <Label Content="{Binding Anfang}" ContentStringFormat="t" Margin="202,34,0,0" HorizontalContentAlignment="Right" Width="97" />
+                    <Label Content="{Binding Ende}" ContentStringFormat="t" Margin="202,15,0,0" HorizontalContentAlignment="Right" Width="97" />
+                    <DataGrid ScrollViewer.HorizontalScrollBarVisibility="Disabled" AutoGenerateColumns="False" Foreground="{DynamicResource AbrechnungFarbe}" ItemsSource="{Binding TourEinträgeA}" HeadersVisibility="None" Background="Transparent" RowHeight="16.451" FontSize="10" HorizontalAlignment="Left" Height="363" Margin="0,93,0,0" VerticalAlignment="Top" Width="350" GridLinesVisibility="None" RowBackground="Transparent">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn IsReadOnly="True" Binding="{Binding Description}" Width="208" />
+                            <DataGridTextColumn IsReadOnly="True" Binding="{Binding KM, StringFormat=g}" CellStyle="{StaticResource CellAlignRight}" Width="37" />
+                            <DataGridTextColumn IsReadOnly="True" Binding="{Binding APES, StringFormat=c}" CellStyle="{StaticResource CellAlignRight}" Width="53" />
+                            <DataGridTextColumn IsReadOnly="True" Binding="{Binding Preis, StringFormat=c}" CellStyle="{StaticResource CellAlignRight}" Width="50" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Label Content="{Binding ÜbertragKM}" ContentStringFormat="g" HorizontalAlignment="Left" Margin="208,452,0,0" VerticalAlignment="Top" Width="38" HorizontalContentAlignment="Right" Height="26"/>
+                    <Label Content="{Binding ÜbertragAPES}" ContentStringFormat="c" HorizontalAlignment="Left" Margin="246,452,0,0" VerticalAlignment="Top" Width="52" HorizontalContentAlignment="Right" Height="26"/>
+                    <Label Content="{Binding ÜbertragPreis}" ContentStringFormat="c" HorizontalAlignment="Left" Margin="298,452,0,0" VerticalAlignment="Top" Width="52" HorizontalContentAlignment="Right" Height="26"/>
+                </Grid>
+                <Grid Margin="807,9,381,688">
+                    <DataGrid ScrollViewer.HorizontalScrollBarVisibility="Disabled" AutoGenerateColumns="False" Foreground="{DynamicResource ResourceKey=AbrechnungFarbe}" ItemsSource="{Binding TourEinträgeB}" HeadersVisibility="None" Background="Transparent" RowHeight="16.451" FontSize="10" HorizontalAlignment="Left" Height="243" Margin="0,39,0,0" VerticalAlignment="Top" Width="350" GridLinesVisibility="None" RowBackground="Transparent">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn IsReadOnly="True" Binding="{Binding Description}" Width="208" />
+                            <DataGridTextColumn IsReadOnly="True" Binding="{Binding KM, StringFormat=g}" CellStyle="{StaticResource CellAlignRight}" Width="37" />
+                            <DataGridTextColumn IsReadOnly="True" Binding="{Binding APES, StringFormat=c}" CellStyle="{StaticResource CellAlignRight}" Width="53" />
+                            <DataGridTextColumn IsReadOnly="True" Binding="{Binding Preis, StringFormat=c}" CellStyle="{StaticResource CellAlignRight}" Width="50" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Label Content="{Binding AbrechnungGesamtKM}" ContentStringFormat="g" HorizontalAlignment="Left" Margin="207,279,0,0" VerticalAlignment="Top" Width="37" HorizontalContentAlignment="Right"/>
+                    <Label Content="{Binding AbrechnungGesamtOhneUhr}" ContentStringFormat="c" HorizontalAlignment="Left" Margin="245,297,0,0" VerticalAlignment="Top" Width="52" Height="24" HorizontalContentAlignment="Right"/>
+                    <Label Content="{Binding OffiziellEinnahmen}" ContentStringFormat="c" HorizontalAlignment="Left" Margin="298,334,0,0" VerticalAlignment="Top" Width="52" Height="24" HorizontalContentAlignment="Right"/>
+                    <Label Content="{Binding OffiziellLohn}" ContentStringFormat="c" HorizontalAlignment="Left" Margin="251,372,0,0" VerticalAlignment="Top" Width="99" Height="24" HorizontalContentAlignment="Right"/>
+                    <Label Content="{Binding OffiziellRabatt}" ContentStringFormat="c" HorizontalAlignment="Left" Margin="251,390,0,0" VerticalAlignment="Top" Width="99" Height="24" HorizontalContentAlignment="Right"/>
+                    <Label Content="{Binding OffiziellRechnung}" ContentStringFormat="c" HorizontalAlignment="Left" Margin="251,409,0,0" VerticalAlignment="Top" Width="99" Height="24" HorizontalContentAlignment="Right"/>
+                    <Label Content="{Binding Abzaehlen}" ContentStringFormat="c" HorizontalAlignment="Left" Margin="251,425,0,0" VerticalAlignment="Top" Width="99" Height="29" FontSize="14" HorizontalContentAlignment="Right"/>
+                    <Label Content="{Binding ÜbertragKM}" ContentStringFormat="g" HorizontalAlignment="Left" Margin="206,0,0,0" VerticalAlignment="Top" Width="37" HorizontalContentAlignment="Right" Height="26"/>
+                    <Label Content="{Binding ÜbertragAPES}" ContentStringFormat="c" HorizontalAlignment="Left" Margin="244,0,0,0" VerticalAlignment="Top" Width="52" HorizontalContentAlignment="Right" Height="26"/>
+                    <Label Content="{Binding ÜbertragPreis}" ContentStringFormat="c" HorizontalAlignment="Left" Margin="297,0,0,0" VerticalAlignment="Top" Width="52" HorizontalContentAlignment="Right" Height="26"/>
+                </Grid>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

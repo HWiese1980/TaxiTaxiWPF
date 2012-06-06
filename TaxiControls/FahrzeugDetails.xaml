@@ -1,0 +1,102 @@
+﻿<UserControl x:Class="TaxiTaxiWPF.TaxiControls.FahrzeugDetails"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:txctl="clr-namespace:TaxiTaxiWPF.TaxiControls" xmlns:TaxiTaxiWPF="clr-namespace:TaxiTaxiWPF"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase" mc:Ignorable="d" 
+             d:DesignHeight="409" d:DesignWidth="673">
+    <UserControl.Resources>
+        <Style TargetType="Label">
+            <Setter Property="MinHeight" Value="25" />
+            <Setter Property="MinWidth" Value="80" />
+            <Setter Property="FontFamily" Value="Verdana" />
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="Foreground" Value="Navy" />
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <DockPanel>
+            <Border Padding="0,0,0,15" DockPanel.Dock="Top" BorderBrush="Navy" BorderThickness="2" CornerRadius="6" Margin="8,8,8,0" Background="White">
+                <Grid Height="263">
+                    <Separator Height="2" Margin="12,130,10,0" VerticalAlignment="Top"/>
+                    <Label Content="Total gesamt" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" />
+                    <Label Content="Besetzt gesamt" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,40,0,0" />
+                    <Label Content="Besetzt 2x" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="211,40,0,0" />
+                    <Label Content="Leer km offen:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="211,10,0,0" />
+                    <Label Content="Touren gesamt" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,70,0,0" />
+                    <Label Content="Fahrpreise gesamt" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,100,0,0" />
+                    <Border Margin="10,0,10,10" CornerRadius="5" Height="25" VerticalAlignment="Bottom">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Preisdifferenz, Converter={TaxiTaxiWPF:ConditionalBooleanConverter Condition='LessOrEqual',CompareValue='0.0'}}" Value="True" >
+                                        <Setter Property="Background" Value="LightGreen" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Preisdifferenz, Converter={TaxiTaxiWPF:ConditionalBooleanConverter Condition='GreaterThan',CompareValue='0.0'}}" Value="True" >
+                                        <Setter Property="Background" Value="Salmon" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <Grid>
+                            <Label HorizontalAlignment="Left" Content="Differenz:" VerticalAlignment="Top" />
+                            <Label HorizontalAlignment="Right" Content="{Binding Preisdifferenz}" ContentStringFormat="c" VerticalAlignment="Top" FontWeight="Bold" />
+                        </Grid>
+                    </Border>
+                    <Label Content="{Binding TotalTotal}" ContentStringFormat="d1" HorizontalAlignment="Left" Margin="126,10,0,0" VerticalAlignment="Top"/>
+                    <Label Content="{Binding BesetztTotal}" ContentStringFormat="d1" HorizontalAlignment="Left" Margin="126,41,0,0" VerticalAlignment="Top"/>
+                    <Label Content="{Binding TourenTotal}" ContentStringFormat="g" HorizontalAlignment="Left" Margin="126,70,0,0" VerticalAlignment="Top"/>
+                    <Label Content="{Binding PreisTotal}" ContentStringFormat="c" HorizontalAlignment="Left" Margin="126,100,0,0" VerticalAlignment="Top"/>
+                    <Label Content="{Binding Besetzt2x}" ContentStringFormat="d1" HorizontalAlignment="Left" Margin="321,40,0,0" VerticalAlignment="Top"/>
+                    <Label Content="{Binding Leer}" ContentStringFormat="d1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="321,10,0,0" />
+                    <Label Content="Fahrpr. n. Rabatt" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="211,100,0,0" />
+                    <Label Content="{Binding PreisNachRabatt}" ContentStringFormat="c" HorizontalAlignment="Left" Margin="321,100,0,0" VerticalAlignment="Top"/>
+                    <Label Content="Touren n. Uhr" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="211,70,0,0" />
+                    <Label Content="{Binding TourCount}" ContentStringFormat="d1" HorizontalAlignment="Left" Margin="321,70,0,0" VerticalAlignment="Top"/>
+                    <Border Background="Wheat" Padding="5" BorderBrush="Beige" BorderThickness="3" Opacity="0.4" Margin="10,137,10,0" VerticalAlignment="Top">
+                        <Grid>
+                            <Label Content="Einzelfahrpreise Summe:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                            <Label Content="{Binding TourPricesSum}" ContentStringFormat="c" HorizontalAlignment="Right" VerticalAlignment="Top" FontWeight="Bold"/>
+                            <Label Content="Abzüglich Gesamtfahrpreis:" HorizontalAlignment="Left" Margin="0,30,0,0" VerticalAlignment="Top"/>
+                            <Label Content="{Binding PreisTotal}" ContentStringFormat="-{0:c}" HorizontalAlignment="Right" Margin="0,30,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Border>
+            <Separator Height="3" Margin="8" DockPanel.Dock="Top" />
+            <ToolBarTray DockPanel.Dock="Top">
+                <ToolBar>
+                    <Button Width="25" Height="25" Click="AddTourClick" ToolTip="Fahrt hinzufügen">
+                        <Image Source="..\Images\1338809739_001_01.png" Width="16" />
+                    </Button>
+                    <Button Width="25" Height="25" Click="MarkierenAlsSoldatenfahrtClick" ToolTip="Ausgewählte Fahrt als Soldatenfahrt behandeln">
+                        <Image Source="..\Images\1338809716_soldier.png" Width="16"  />
+                    </Button>
+                    <Button Width="25" Height="25" Click="AddSpecialTourClick" ToolTip="Mit Soldatenfahrten auffüllen">
+                        <Grid>
+                            <Image Margin="-4,-4,0,0" Source="..\Images\1338809716_soldier.png" Width="16" />
+                            <Image Margin="4,4,0,0" Source="..\Images\1338809716_soldier.png" Width="16" />
+                        </Grid>
+                    </Button>
+                    <Button Content="Löschen" Visibility="Collapsed" />
+                </ToolBar>
+            </ToolBarTray>
+            <Label Foreground="DarkRed" FontWeight="Bold" DockPanel.Dock="Bottom" Content="* - Achtung! 'A.P.E.S.' ist zur Zeit als reiner Rabattbetrag implementiert, daher positiv anzugeben!" />
+            <DataGrid HeadersVisibility="Column" SelectedIndex="0" MinHeight="30" ItemsSource="{Binding Fahrten}" AutoGenerateColumns="False" x:Name="fahrtenDG">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="#" Binding="{Binding SortOrder}" />
+                    <DataGridTextColumn Header="Bemerkung" Binding="{Binding Description, UpdateSourceTrigger=PropertyChanged}" />
+                    <DataGridTextColumn Header="KM" Binding="{Binding KM, StringFormat='{}{0:g}', TargetNullValue={x:Static System:String.Empty}, UpdateSourceTrigger=LostFocus}" />
+                    <DataGridTextColumn Header="A.P.E.S.*" Binding="{Binding APES, TargetNullValue={x:Static System:String.Empty}, StringFormat='c', UpdateSourceTrigger=LostFocus}" />
+                    <DataGridTextColumn Header="Preis" Binding="{Binding Preis, StringFormat='c', TargetNullValue={x:Static System:String.Empty}, UpdateSourceTrigger=LostFocus}" />
+                    <DataGridTextColumn Header="Bar Bezahlt" Binding="{Binding Bezahlt, StringFormat='c', Mode=OneWay}" />
+                    <DataGridCheckBoxColumn Header="Auf Rechnung" Binding="{Binding Rechnungsfahrt, UpdateSourceTrigger=PropertyChanged}" />
+                    <DataGridCheckBoxColumn Header="Ohne Uhr" Binding="{Binding OhneUhr, UpdateSourceTrigger=PropertyChanged}" />
+                    <!--<DataGridCheckBoxColumn Header="Sonderausgabe" Binding="{Binding Sonderausgabe, UpdateSourceTrigger=PropertyChanged}" />-->
+                </DataGrid.Columns>
+            </DataGrid>
+        </DockPanel>
+    </Grid>
+</UserControl>
