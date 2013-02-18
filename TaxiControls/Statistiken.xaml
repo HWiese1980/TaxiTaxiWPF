@@ -7,7 +7,7 @@
              xmlns:chartingToolkit="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
              mc:Ignorable="d"
              
-             d:DesignHeight="378" d:DesignWidth="652">
+             d:DesignHeight="592" d:DesignWidth="700">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" />
@@ -41,7 +41,7 @@
                 </DataGrid.Columns>
             </DataGrid>
         </StackPanel>
-        <chartingToolkit:Chart Grid.Column="99" Title="Arbeitszeit">
+        <chartingToolkit:Chart Grid.Column="1" Title="Arbeitszeit" Height="320" VerticalAlignment="Top">
             <chartingToolkit:Chart.Resources>
                 <Style TargetType="chartingToolkit:AxisLabel" x:Key="BetragAchse">
                     <Setter Property="StringFormat" Value="{}{0:c}" />
@@ -53,17 +53,33 @@
                     <Setter Property="StringFormat" Value="{}{0:MMM yyyy}" />
                 </Style>
             </chartingToolkit:Chart.Resources>
-            <chartingToolkit:LineSeries ItemsSource="{Binding Wochenstatistik}" DependentValuePath="Stunden" IndependentValuePath="Key"  Title="h/Woche">
-            </chartingToolkit:LineSeries>
-            <chartingToolkit:LineSeries ItemsSource="{Binding Monatsstatistik}" DependentValuePath="Stunden" IndependentValuePath="Key"  Title="h/Monat">
-                <chartingToolkit:LineSeries.IndependentAxis>
+            <chartingToolkit:ColumnSeries HorizontalContentAlignment="Right" ItemsSource="{Binding Monatsstatistik}" DependentValuePath="Stunden" IndependentValuePath="Key"  Title="h/Monat">
+                <chartingToolkit:ColumnSeries.DataPointStyle>
+                    <Style TargetType="chartingToolkit:ColumnDataPoint">
+                        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                    </Style>
+                </chartingToolkit:ColumnSeries.DataPointStyle>
+            </chartingToolkit:ColumnSeries>
+            <chartingToolkit:ColumnSeries ItemsSource="{Binding Wochenstatistik}" DependentValuePath="Stunden" IndependentValuePath="Key"  Title="h/Woche">
+                <chartingToolkit:ColumnSeries.IndependentAxis>
                     <chartingToolkit:DateTimeAxis IntervalType="Months" Interval="1" ShowGridLines="True" Orientation="X" VerticalAlignment="Bottom" AxisLabelStyle="{StaticResource MonatAchse}" Title="Monat">
                     </chartingToolkit:DateTimeAxis>
-                </chartingToolkit:LineSeries.IndependentAxis>
-                <chartingToolkit:LineSeries.DependentRangeAxis>
+                </chartingToolkit:ColumnSeries.IndependentAxis>
+                <chartingToolkit:ColumnSeries.DependentRangeAxis>
                     <chartingToolkit:LinearAxis Interval="6" ShowGridLines="True" Orientation="Y" AxisLabelStyle="{StaticResource ZeitAchse}" Minimum="0" Maximum="66" Title="Stunden" />
-                </chartingToolkit:LineSeries.DependentRangeAxis>
-            </chartingToolkit:LineSeries>
+                </chartingToolkit:ColumnSeries.DependentRangeAxis>
+            </chartingToolkit:ColumnSeries>
         </chartingToolkit:Chart>
+        <GroupBox Grid.Column="1" Header="Interessantes" HorizontalAlignment="Left" Margin="10,325,0,0" VerticalAlignment="Top" Height="257" Width="447">
+            <ItemsControl>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <HeaderedContentControl Header="durchschn. Trinkgeld pro Fahrt: " Content="{Binding TipProTrip}" ContentStringFormat="c" />
+                <HeaderedContentControl Header="durchschn. Trinkgeld pro Stunde: " Content="{Binding TipProStunde}" ContentStringFormat="c" />
+            </ItemsControl>
+        </GroupBox>
     </Grid>
 </UserControl>

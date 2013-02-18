@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TaxiTaxiWPF</RootNamespace>
     <AssemblyName>TaxiTaxiWPF</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -17,7 +17,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <Utf8Output>true</Utf8Output>
     <ExpressionBlendVersion>4.0.20621.0</ExpressionBlendVersion>
-    <PublishUrl>V:\DropBox\Dropbox\Kai Shares\TaxiTaxi\</PublishUrl>
+    <PublishUrl>veröffentlichen\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
@@ -27,7 +27,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>10</ApplicationRevision>
+    <ApplicationRevision>13</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -39,7 +39,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;POSTSHARP</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>true</UseVSHostingProcess>
@@ -48,14 +48,16 @@
     </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>none</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <OutputPath>V:\DropBox\Dropbox\Kai Shares\TaxiTaxi\</OutputPath>
+    <DefineConstants>
+    </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>TaxiTaxiWPF.App</StartupObject>
@@ -79,6 +81,30 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DotNetOpenAuth">
+      <HintPath>C:\Users\Hendrik\Desktop\Lib\DotNetOpenAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis">
+      <HintPath>C:\Users\Hendrik\Desktop\Lib\Google.Apis.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Authentication.OAuth2">
+      <HintPath>C:\Users\Hendrik\Desktop\Lib\Google.Apis.Authentication.OAuth2.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Tools.CodeGen">
+      <HintPath>C:\Users\Hendrik\Desktop\Lib\Google.Apis.Tools.CodeGen.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>C:\Users\Hendrik\Desktop\Lib\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json.Net35">
+      <HintPath>C:\Users\Hendrik\Desktop\Lib\Newtonsoft.Json.Net35.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json.Silverlight">
+      <HintPath>C:\Users\Hendrik\Desktop\Lib\Newtonsoft.Json.Silverlight.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>C:\Users\Hendrik\Desktop\Lib\nunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationFramework.Aero" />
     <Reference Include="PresentationFramework.Classic" />
     <Reference Include="PresentationFramework.Luna" />
@@ -119,16 +145,24 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AbrechnungConverter\Datum.cs" />
+    <Compile Include="AbrechnungConverter\Farbskala.cs" />
     <Compile Include="AbrechnungConverter\UhrWert.cs" />
     <Compile Include="AbrechnungConverter\Wagen.cs" />
+    <Compile Include="AbrechnungConverter\Woche.cs" />
     <Compile Include="ConditionalBooleanConverter.cs" />
-    <Compile Include="ObservePropertyAttribute.cs" />
     <Compile Include="TaxiControls\Abrechnung.xaml.cs">
       <DependentUpon>Abrechnung.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TaxiControls\Arbeitszettel.xaml.cs">
+      <DependentUpon>Arbeitszettel.xaml</DependentUpon>
     </Compile>
     <Compile Include="TaxiControls\FahrzeugDetails.xaml.cs">
       <DependentUpon>FahrzeugDetails.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TaxiControls\Kleingeldrechner.xaml.cs">
+      <DependentUpon>Kleingeldrechner.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TaxiControls\MyDataGrid.cs" />
     <Compile Include="TaxiControls\ShiftDetail.xaml.cs">
       <DependentUpon>ShiftDetail.xaml</DependentUpon>
     </Compile>
@@ -136,14 +170,14 @@
       <DependentUpon>Statistiken.xaml</DependentUpon>
     </Compile>
     <Compile Include="TaxiControls\TourSort.cs" />
+    <Compile Include="TaxiData\DataDB.cs" />
     <Compile Include="TaxiData\DatumWocheConverter.cs" />
     <Compile Include="TaxiData\Fahrt.cs" />
     <Compile Include="TaxiData\Fahrzeug.cs" />
-    <Compile Include="TaxiData\Helper.cs" />
+    <Compile Include="TaxiData\IndexedObservableCollection.cs" />
+    <Compile Include="TaxiData\Privatausgabe.cs" />
     <Compile Include="TaxiData\Statistikdaten.cs" />
     <Compile Include="TaxiData\Schicht.cs" />
-    <Compile Include="TaxiData\TaxiBase.cs" />
-    <Compile Include="TaxiData\TaxiDB.cs" />
     <Compile Include="TaxiData\Validierung.cs" />
     <Compile Include="UserControlSource.cs" />
     <Page Include="TaxiControls\AbrechnungRes.xaml">
@@ -166,7 +200,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="TaxiControls\Arbeitszettel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="TaxiControls\FahrzeugDetails.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TaxiControls\Kleingeldrechner.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -197,7 +239,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -236,7 +280,17 @@
     <Resource Include="Images\1338809739_001_01.png" />
     <Resource Include="Images\1338809764_dialog-close.png" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SeveQsDataBase\SeveQsDataBase.csproj">
+      <Project>{72A89365-9C3D-4FED-BAB7-71B5998E605D}</Project>
+      <Name>SeveQsDataBase</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>del "$(OutDir)*.pdb" 2&gt;nul 1&gt;nul
+exit 0</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

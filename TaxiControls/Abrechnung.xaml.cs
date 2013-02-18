@@ -15,6 +15,8 @@ using System.Windows.Shapes;
 
 namespace TaxiTaxiWPF.TaxiControls
 {
+    using System.Diagnostics;
+
     /// <summary>
     /// Interaction logic for Abrechnung.xaml
     /// </summary>
@@ -23,6 +25,11 @@ namespace TaxiTaxiWPF.TaxiControls
         public Abrechnung()
         {
             InitializeComponent();
+        }
+
+        private void keyUpEvent(object sender, KeyEventArgs e)
+        {
+            Debugger.Break();
         }
     }
 }

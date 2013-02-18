@@ -4,12 +4,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using SeveQsDataBase;
 
 #endregion
 
 namespace TaxiTaxiWPF.TaxiData
 {
-    public class Fahrt : TaxiBase
+    public class Fahrt : DataBase
     {
         private float? _apes;
         private string _description;
@@ -30,81 +31,59 @@ namespace TaxiTaxiWPF.TaxiData
             }
         }
 
-        [ObserveProperty(Dependency = "Rechnungsfahrt")]
+        //[ObserveProperty(Dependency = "Rechnungsfahrt")]
         public bool Rechnungsfahrt
         {
             get { return _rechnungsfahrt; }
             set
             {
                 _rechnungsfahrt = value;
-                OnPropertyChanged();
+                OnPropertyChanged("Rechnungsfahrt");
             }
         }
 
-        [ObserveProperty(Dependency = "OhneUhr")]
-        public bool OhneUhr
-        {
-            get { return _ohneUhr; }
-            set
-            {
-                _ohneUhr = value;
-                OnPropertyChanged();
-            }
-        }
-
-        [ObserveProperty(Dependency = "Sonderausgabe")]
-        public bool Sonderausgabe
-        {
-            get { return _sonderausgabe; }
-            set
-            {
-                _sonderausgabe = value;
-                OnPropertyChanged();
-            }
-        }
-
-        [ObserveProperty(Dependency = "KM")]
+        //[ObserveProperty(Dependency = "KM")]
         public int? KM
         {
             get { return _km; }
             set
             {
                 _km = value;
-                OnPropertyChanged();
+                OnPropertyChanged("KM");
             }
         }
 
-        [ObserveProperty(Dependency = "APES")]
+        //[ObserveProperty(Dependency = "APES")]
         public float? APES
         {
             get { return _apes; }
             set
             {
                 _apes = value;
-                OnPropertyChanged();
+                OnPropertyChanged("APES");
             }
         }
 
         [ObserveProperty(Dependency = "Sonderausgabe")]
-        [ObserveProperty(Dependency = "Preis")]
+        //[ObserveProperty(Dependency = "Preis")]
         public float? Preis
         {
             get { return _preis; }
             set
             {
                 _preis = value;
-                OnPropertyChanged();
+                OnPropertyChanged("Preis");
             }
         }
 
-        [ObserveProperty(Dependency = "Description")]
+        //[ObserveProperty(Dependency = "Description")]
         public string Description
         {
             get { return _description; }
             set
             {
                 _description = value;
-                OnPropertyChanged();
+                OnPropertyChanged("Description");
             }
         }
 
@@ -112,7 +91,8 @@ namespace TaxiTaxiWPF.TaxiData
         [ObserveProperty(Dependency = "Preis")]
         [ObserveProperty(Dependency = "APES")]
         [ObserveProperty(Dependency = "Soldatenfahrt")]
-        public float Bezahlt { get { return (Rechnungsfahrt) ? 0.0F : (Preis ?? 0.0F) - (APES ?? 0.0F); } }
+        [ObserveProperty(Dependency = "Description")]
+        public float Bezahlt { get { return (Rechnungsfahrt) ? 0.0F : (Preis ?? 0.0F) + (APES ?? 0.0F); } }
 
         public override string Name
         {

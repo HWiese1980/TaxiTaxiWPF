@@ -8,7 +8,7 @@
              x:Class="TaxiTaxiWPF.TaxiControls.Abrechnung" 
              mc:Ignorable="d" 
              d:DesignHeight="557.333" d:DesignWidth="1207.667">
-    <Grid>
+    <Grid KeyUp="keyUpEvent">
         <Grid.Resources>
             <Style TargetType="DataGridCell" x:Key="CellAlignRight">
                 <Setter Property="TextBlock.TextAlignment" Value="Right" />
@@ -76,9 +76,10 @@
                     </DataGrid>
                     <Label Content="{Binding AbrechnungGesamtKM}" ContentStringFormat="g" HorizontalAlignment="Left" Margin="207,279,0,0" VerticalAlignment="Top" Width="37" HorizontalContentAlignment="Right"/>
                     <Label Content="{Binding AbrechnungGesamtOhneUhr}" ContentStringFormat="c" HorizontalAlignment="Left" Margin="245,297,0,0" VerticalAlignment="Top" Width="52" Height="24" HorizontalContentAlignment="Right"/>
-                    <Label Content="{Binding OffiziellEinnahmen}" ContentStringFormat="c" HorizontalAlignment="Left" Margin="298,334,0,0" VerticalAlignment="Top" Width="52" Height="24" HorizontalContentAlignment="Right"/>
+                    <Label Content="{Binding OffiziellEinnahmen}" ContentStringFormat="c" HorizontalAlignment="Left" Margin="298,315,0,0" VerticalAlignment="Top" Width="52" Height="24" HorizontalContentAlignment="Right"/>
+                    <Label Content="{Binding OffiziellEinnahmenInklAPES}" ContentStringFormat="c" HorizontalAlignment="Left" Margin="298,335,0,0" VerticalAlignment="Top" Width="52" Height="24" HorizontalContentAlignment="Right"/>
                     <Label Content="{Binding OffiziellLohn}" ContentStringFormat="c" HorizontalAlignment="Left" Margin="251,372,0,0" VerticalAlignment="Top" Width="99" Height="24" HorizontalContentAlignment="Right"/>
-                    <Label Content="{Binding OffiziellRabatt}" ContentStringFormat="c" HorizontalAlignment="Left" Margin="251,390,0,0" VerticalAlignment="Top" Width="99" Height="24" HorizontalContentAlignment="Right"/>
+                    <Label Content="{Binding OffiziellSonstiges}" ContentStringFormat="c" HorizontalAlignment="Left" Margin="251,390,0,0" VerticalAlignment="Top" Width="99" Height="24" HorizontalContentAlignment="Right"/>
                     <Label Content="{Binding OffiziellRechnung}" ContentStringFormat="c" HorizontalAlignment="Left" Margin="251,409,0,0" VerticalAlignment="Top" Width="99" Height="24" HorizontalContentAlignment="Right"/>
                     <Label Content="{Binding Abzaehlen}" ContentStringFormat="c" HorizontalAlignment="Left" Margin="251,425,0,0" VerticalAlignment="Top" Width="99" Height="29" FontSize="14" HorizontalContentAlignment="Right"/>
                     <Label Content="{Binding ÜbertragKM}" ContentStringFormat="g" HorizontalAlignment="Left" Margin="206,0,0,0" VerticalAlignment="Top" Width="37" HorizontalContentAlignment="Right" Height="26"/>

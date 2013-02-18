@@ -8,21 +8,31 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Markup;
+using Google.Apis.Authentication.OAuth2;
+using Google.Apis.Authentication.OAuth2.DotNetOpenAuth;
 using Microsoft.Win32;
+using TaxiTaxiWPF.Properties;
 using TaxiTaxiWPF.TaxiData;
 
 #endregion
 
 namespace TaxiTaxiWPF
 {
+    using System.Collections.ObjectModel;
+    using System.Windows.Controls;
+    using System.Windows.Data;
+
     /// <summary>
     ///   Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
+
         private string _openFileName = "";
-        private OpenFileDialog ofd = new OpenFileDialog() { Filter = "TaxiTaxi Datei|*.txi" };
-        private SaveFileDialog sfd = new SaveFileDialog() { Filter = "TaxiTaxi Datei|*.txi" };
+        private readonly OpenFileDialog ofd = new OpenFileDialog { Filter = "TaxiTaxi Datei|*.txi" };
+        private readonly SaveFileDialog sfd = new SaveFileDialog { Filter = "TaxiTaxi Datei|*.txi" };
+
+        private NativeApplicationClient _native = new NativeApplicationClient(GoogleAuthenticationServer.Description);
 
         public MainWindow()
         {
@@ -31,14 +41,50 @@ namespace TaxiTaxiWPF
                                               new FrameworkPropertyMetadata(
                                                       XmlLanguage.GetLanguage(
                                                                               CultureInfo.CurrentCulture.IetfLanguageTag)));
+            _native.ClientIdentifier = "1078222205383.apps.googleusercontent.com";
+            _native.ClientSecret = "xRTCPHENc7lPxcoRT4N2UMb8";
+
             InitializeComponent();
+
+            /* SeveQsDataBase.DataBase.StatusChanged += (x, y) => this.Dispatcher.Invoke(new Func<object>(() => this.statusLbl.Content = y.Value)); */
+
+            DB.FileLoaded += (x, y) =>
+            {
+                _openFileName = y.Value;
+                var s = new Settings { LastFile = y.Value };
+                s.Save();
+            };
+
+            DB.PropertyChanged += (x, y) =>
+                {
+                    if (y.PropertyName == "Schichten")
+                    {
+                        Dispatcher.Invoke(
+                            new Action(() =>
+                                {
+                                    var b = new Binding("SchichtenView") { Source = this.DB, Path = new PropertyPath("SchichtenView") };
+                                    this.shiftsDG.SetBinding(ItemsControl.ItemsSourceProperty, b);
+                                }));
+                    }
+                };
+
+            Loaded += (x, y) =>
+            {
+
+                var s = new Settings();
+                DB.UIDispatcher = Dispatcher;
+                if (!String.IsNullOrEmpty(s.LastFile))
+                {
+                    DB.Load(s.LastFile);
+                }
+            };
         }
 
-        private TaxiDB DB { get { return (TaxiDB)FindResource("taxiDB"); } }
+        private DataDB DB { get { return (DataDB)FindResource("taxiDB"); } }
 
         private void AddShiftClick(object sender, RoutedEventArgs e)
         {
-            DB.Schichten.Add(new Schicht());
+            DB.Schichten.Add(new Schicht(DB.Schichten));
         }
 
         private void CanAlways(object sender, CanExecuteRoutedEventArgs e)
@@ -56,7 +102,7 @@ namespace TaxiTaxiWPF
             Dispatcher.Invoke(
                               new Action(() =>
                                     {
-                                        if (!(bool) ofd.ShowDialog())
+                                        if (!(bool)ofd.ShowDialog())
                                         {
                                             return;
                                         }
@@ -92,13 +138,13 @@ namespace TaxiTaxiWPF
             e.CanExecute = !String.IsNullOrEmpty(_openFileName);
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void ButtonClick1(object sender, RoutedEventArgs e)
         {
-            foreach(var schicht in DB.Schichten)
+            foreach (var schicht in DB.Schichten)
             {
-                foreach(var fahrzeug in schicht.Fahrzeuge)
+                foreach (var fahrzeug in schicht.Fahrzeuge)
                 {
-                    foreach(var fahrt in fahrzeug.Fahrten)
+                    foreach (var fahrt in fahrzeug.Fahrten)
                     {
                         fahrt.Refresh();
                     }
@@ -108,12 +154,7 @@ namespace TaxiTaxiWPF
             }
         }
 
-        private void shiftsDG_Selected_1(object sender, RoutedEventArgs e)
-        {
-            
-        }
-
-        private void SelectedShiftChanged(object sender, System.Windows.Controls.SelectedCellsChangedEventArgs e)
+        private void SelectedShiftChanged(object sender, SelectedCellsChangedEventArgs e)
         {
             var shift = shiftsDG.SelectedItem as Schicht;
             shiftDetails.DataContext = shift;
@@ -124,11 +165,18 @@ namespace TaxiTaxiWPF
             {
                 var selectedShifts = selectedObjects.Where(p => p is Schicht).Cast<Schicht>();
                 SummeAbzaehlen.Content = String.Format("{0:c}", selectedShifts.Sum(p => p.Abzaehlen));
+                SummeTip.Content = String.Format("{0:c}", selectedShifts.Sum(p => p.Trinkgeld));
+                SummeIncome.Content = String.Format("{0:c}", selectedShifts.Sum(p => p.EigenerVerdienst));
             }
             else
             {
-                SummeAbzaehlen.Content = "keine Schicht ausgewählt";
+                SummeIncome.Content = SummeTip.Content = SummeAbzaehlen.Content = "keine Schicht ausgewählt";
             }
+        }
+
+        private void shiftDetails_Loaded(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

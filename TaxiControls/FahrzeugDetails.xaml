@@ -18,16 +18,26 @@
     </UserControl.Resources>
     <Grid>
         <DockPanel>
-            <Border Padding="0,0,0,15" DockPanel.Dock="Top" BorderBrush="Navy" BorderThickness="2" CornerRadius="6" Margin="8,8,8,0" Background="White">
-                <Grid Height="263">
+            <Border Padding="0,0,0,15" DockPanel.Dock="Top" BorderBrush="Navy" BorderThickness="2" CornerRadius="6" Margin="8,8,8,0" Background="White" Height="256">
+                <Grid Margin="0,0,0,-8">
                     <Separator Height="2" Margin="12,130,10,0" VerticalAlignment="Top"/>
                     <Label Content="Total gesamt" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" />
                     <Label Content="Besetzt gesamt" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,40,0,0" />
-                    <Label Content="Besetzt 2x" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="211,40,0,0" />
-                    <Label Content="Leer km offen:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="211,10,0,0" />
+                    <Label Content="Besetzt 2x" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="261,40,0,0" />
+                    <Label Content="Leer km offen:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="261,10,0,0" />
                     <Label Content="Touren gesamt" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,70,0,0" />
-                    <Label Content="Fahrpreise gesamt" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,100,0,0" />
-                    <Border Margin="10,0,10,10" CornerRadius="5" Height="25" VerticalAlignment="Bottom">
+                    <Label Content="Sum. Einzelfahrpreise" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,100,0,0" />
+                    <Label Content="{Binding TotalTotal}" ContentStringFormat="d1" HorizontalAlignment="Left" Margin="176,10,0,0" VerticalAlignment="Top"/>
+                    <Label Content="{Binding BesetztTotal}" ContentStringFormat="d1" HorizontalAlignment="Left" Margin="176,41,0,0" VerticalAlignment="Top"/>
+                    <Label Content="{Binding TourenTotal}" ContentStringFormat="g" HorizontalAlignment="Left" Margin="176,70,0,0" VerticalAlignment="Top"/>
+                    <Label Content="{Binding PreisTotal}" ContentStringFormat="c" HorizontalAlignment="Left" Margin="176,100,0,0" VerticalAlignment="Top"/>
+                    <Label Content="{Binding Besetzt2x}" ContentStringFormat="d1" HorizontalAlignment="Left" Margin="408,40,0,0" VerticalAlignment="Top"/>
+                    <Label Content="{Binding Leer}" ContentStringFormat="d1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="408,10,0,0" />
+                    <Label Content="Fahrpr. inkl. APES" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="261,100,0,0" />
+                    <Label Content="{Binding PreisInklAPES}" ContentStringFormat="c" HorizontalAlignment="Left" Margin="408,100,0,0" VerticalAlignment="Top"/>
+                    <Label Content="Touren n. Uhr" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="261,70,0,0" />
+                    <Label Content="{Binding TourCount}" ContentStringFormat="d1" HorizontalAlignment="Left" Margin="408,70,0,0" VerticalAlignment="Top"/>
+                    <Border Padding="5" BorderBrush="Beige" BorderThickness="3" Opacity="0.4" Margin="10,137,10,0" VerticalAlignment="Top" >
                         <Border.Style>
                             <Style TargetType="Border">
                                 <Style.Triggers>
@@ -41,26 +51,12 @@
                             </Style>
                         </Border.Style>
                         <Grid>
-                            <Label HorizontalAlignment="Left" Content="Differenz:" VerticalAlignment="Top" />
-                            <Label HorizontalAlignment="Right" Content="{Binding Preisdifferenz}" ContentStringFormat="c" VerticalAlignment="Top" FontWeight="Bold" />
-                        </Grid>
-                    </Border>
-                    <Label Content="{Binding TotalTotal}" ContentStringFormat="d1" HorizontalAlignment="Left" Margin="126,10,0,0" VerticalAlignment="Top"/>
-                    <Label Content="{Binding BesetztTotal}" ContentStringFormat="d1" HorizontalAlignment="Left" Margin="126,41,0,0" VerticalAlignment="Top"/>
-                    <Label Content="{Binding TourenTotal}" ContentStringFormat="g" HorizontalAlignment="Left" Margin="126,70,0,0" VerticalAlignment="Top"/>
-                    <Label Content="{Binding PreisTotal}" ContentStringFormat="c" HorizontalAlignment="Left" Margin="126,100,0,0" VerticalAlignment="Top"/>
-                    <Label Content="{Binding Besetzt2x}" ContentStringFormat="d1" HorizontalAlignment="Left" Margin="321,40,0,0" VerticalAlignment="Top"/>
-                    <Label Content="{Binding Leer}" ContentStringFormat="d1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="321,10,0,0" />
-                    <Label Content="Fahrpr. n. Rabatt" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="211,100,0,0" />
-                    <Label Content="{Binding PreisNachRabatt}" ContentStringFormat="c" HorizontalAlignment="Left" Margin="321,100,0,0" VerticalAlignment="Top"/>
-                    <Label Content="Touren n. Uhr" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="211,70,0,0" />
-                    <Label Content="{Binding TourCount}" ContentStringFormat="d1" HorizontalAlignment="Left" Margin="321,70,0,0" VerticalAlignment="Top"/>
-                    <Border Background="Wheat" Padding="5" BorderBrush="Beige" BorderThickness="3" Opacity="0.4" Margin="10,137,10,0" VerticalAlignment="Top">
-                        <Grid>
-                            <Label Content="Einzelfahrpreise Summe:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                            <Label Content="Summe Einzelfahrpreise:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                             <Label Content="{Binding TourPricesSum}" ContentStringFormat="c" HorizontalAlignment="Right" VerticalAlignment="Top" FontWeight="Bold"/>
-                            <Label Content="Abzüglich Gesamtfahrpreis:" HorizontalAlignment="Left" Margin="0,30,0,0" VerticalAlignment="Top"/>
+                            <Label Content="Abzüglich Gesamtfahrpreis nach Uhr:" HorizontalAlignment="Left" Margin="0,30,0,0" VerticalAlignment="Top"/>
                             <Label Content="{Binding PreisTotal}" ContentStringFormat="-{0:c}" HorizontalAlignment="Right" Margin="0,30,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+                            <Label HorizontalAlignment="Left" Content="Differenz:" VerticalAlignment="Top" Margin="0,60,0,0" />
+                            <Label HorizontalAlignment="Right" Content="{Binding Preisdifferenz}" ContentStringFormat="c" VerticalAlignment="Top" FontWeight="Bold" Margin="0,60,0,0" />
                         </Grid>
                     </Border>
                 </Grid>
@@ -80,23 +76,22 @@
                             <Image Margin="4,4,0,0" Source="..\Images\1338809716_soldier.png" Width="16" />
                         </Grid>
                     </Button>
+                    <Button Content="Hoch" Click="FahrtHochClick" />
+                    <Button Content="Runter" Click="FahrtRunterClick" />
                     <Button Content="Löschen" Visibility="Collapsed" />
                 </ToolBar>
             </ToolBarTray>
-            <Label Foreground="DarkRed" FontWeight="Bold" DockPanel.Dock="Bottom" Content="* - Achtung! 'A.P.E.S.' ist zur Zeit als reiner Rabattbetrag implementiert, daher positiv anzugeben!" />
-            <DataGrid HeadersVisibility="Column" SelectedIndex="0" MinHeight="30" ItemsSource="{Binding Fahrten}" AutoGenerateColumns="False" x:Name="fahrtenDG">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="#" Binding="{Binding SortOrder}" />
+            <txctl:MyDataGrid InitializingNewItem="fahrtenDG_InitializingNewItem_1" HeadersVisibility="Column" SelectedIndex="0" MinHeight="30" ItemsSource="{Binding FahrtenView}" AutoGenerateColumns="False" x:Name="fahrtenDG">
+                <txctl:MyDataGrid.Columns>
+                    <DataGridTextColumn Header="#" Binding="{Binding Index}" />
                     <DataGridTextColumn Header="Bemerkung" Binding="{Binding Description, UpdateSourceTrigger=PropertyChanged}" />
                     <DataGridTextColumn Header="KM" Binding="{Binding KM, StringFormat='{}{0:g}', TargetNullValue={x:Static System:String.Empty}, UpdateSourceTrigger=LostFocus}" />
-                    <DataGridTextColumn Header="A.P.E.S.*" Binding="{Binding APES, TargetNullValue={x:Static System:String.Empty}, StringFormat='c', UpdateSourceTrigger=LostFocus}" />
+                    <DataGridTextColumn Header="A.P.E.S." Binding="{Binding APES, TargetNullValue={x:Static System:String.Empty}, StringFormat='c', UpdateSourceTrigger=LostFocus}" />
                     <DataGridTextColumn Header="Preis" Binding="{Binding Preis, StringFormat='c', TargetNullValue={x:Static System:String.Empty}, UpdateSourceTrigger=LostFocus}" />
                     <DataGridTextColumn Header="Bar Bezahlt" Binding="{Binding Bezahlt, StringFormat='c', Mode=OneWay}" />
                     <DataGridCheckBoxColumn Header="Auf Rechnung" Binding="{Binding Rechnungsfahrt, UpdateSourceTrigger=PropertyChanged}" />
-                    <DataGridCheckBoxColumn Header="Ohne Uhr" Binding="{Binding OhneUhr, UpdateSourceTrigger=PropertyChanged}" />
-                    <!--<DataGridCheckBoxColumn Header="Sonderausgabe" Binding="{Binding Sonderausgabe, UpdateSourceTrigger=PropertyChanged}" />-->
-                </DataGrid.Columns>
-            </DataGrid>
+                </txctl:MyDataGrid.Columns>
+            </txctl:MyDataGrid>
         </DockPanel>
     </Grid>
 </UserControl>

@@ -7,13 +7,13 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Data;
-using TaxiTaxiWPF.TaxiControls;
+using SeveQsDataBase;
 
 #endregion
 
 namespace TaxiTaxiWPF.TaxiData
 {
-    public class Fahrzeug : TaxiBase
+    public class Fahrzeug : DataBase
     {
         private float _besetztEnde;
         private float _besetztAnfang;
@@ -27,39 +27,61 @@ namespace TaxiTaxiWPF.TaxiData
 
         public Fahrzeug()
         {
-            Fahrten = new ObservableCollection<Fahrt>();
+            Fahrten = new IndexedObservableCollection<Fahrt>();
         }
 
-        private ObservableCollection<Fahrt> _fahrten;
-        [ObserveProperty(Dependency = "Fahrt.SortOrder")]
-        public ObservableCollection<Fahrt> Fahrten
+        [ObserveProperty]
+        [ObserveProperty(Dependency = "Fahrt.Index")]
+        public ICollectionView FahrtenView
+        {
+            get
+            {
+                if (View == null) View = CollectionViewSource.GetDefaultView(_fahrten);
+                var lcv = (ListCollectionView)View;
+                if (lcv.IsAddingNew) lcv.CommitNew();
+
+                View.SortDescriptions.Clear();
+                View.SortDescriptions.Add(new SortDescription("Index", ListSortDirection.Ascending));
+                return View;
+            }
+        }
+
+        private IndexedObservableCollection<Fahrt> _fahrten;
+        public IndexedObservableCollection<Fahrt> Fahrten
         {
             get { return _fahrten; }
             set
             {
                 _fahrten = value;
-                foreach (var item in value) item.Parent = this;
+                foreach (var item in value)
+                {
+                    item.Parent = this;
+                    item.IndexGroup = _fahrten;
+                }
+
                 _fahrten.CollectionChanged += (x, y) =>
-                                              {
-                                                  foreach (IHasParent z in y.NewItems ?? new List<IHasParent>()) 
-                                                      z.Parent = this;
-                                                  OnPropertyChanged("Fahrten");
-                                                  SortRefresh();
-                                              };
+                    {
+                        lock (_fahrten)
+                        {
+                            foreach (IHasParent z in y.NewItems ?? new List<IHasParent>())
+                            {
+                                z.Parent = this;
+                            }
+
+                            foreach (IIndexed z in y.NewItems ?? new List<IIndexed>())
+                            {
+                                z.Index = _fahrten.Max(p => p.Index) + 1;
+                                z.IndexGroup = _fahrten;
+                            }
+                        }
+                        OnPropertyChanged("Fahrten");
+                    };
 
                 OnPropertyChanged();
-                SortRefresh();
             }
         }
 
-        private void SortRefresh()
-        {
-            var cvs = (ListCollectionView)CollectionViewSource.GetDefaultView(_fahrten);
-            cvs.CustomSort = new TourSort();
-            cvs.Refresh();
-        }
-
-        [ObserveProperty(Dependency = "Nummer")]
+        //[ObserveProperty(Dependency = "Nummer")]
         public int Nummer
         {
             get { return _nummer; }
@@ -70,7 +92,7 @@ namespace TaxiTaxiWPF.TaxiData
             }
         }
 
-        [ObserveProperty(Dependency = "TotalAnfang")]
+        //[ObserveProperty(Dependency = "TotalAnfang")]
         public float TotalAnfang
         {
             get { return _totalAnfang; }
@@ -81,7 +103,7 @@ namespace TaxiTaxiWPF.TaxiData
             }
         }
 
-        [ObserveProperty(Dependency = "TotalEnde")]
+        //[ObserveProperty(Dependency = "TotalEnde")]
         public float TotalEnde
         {
             get { return _totalEnde; }
@@ -99,7 +121,7 @@ namespace TaxiTaxiWPF.TaxiData
             get { return (float)Math.Round(TotalEnde - TotalAnfang, 1); }
         }
 
-        [ObserveProperty(Dependency = "BesetztAnfang")]
+        //[ObserveProperty(Dependency = "BesetztAnfang")]
         public float BesetztAnfang
         {
             get { return _besetztAnfang; }
@@ -110,7 +132,7 @@ namespace TaxiTaxiWPF.TaxiData
             }
         }
 
-        [ObserveProperty(Dependency = "BesetztEnde")]
+        //[ObserveProperty(Dependency = "BesetztEnde")]
         public float BesetztEnde
         {
             get { return _besetztEnde; }
@@ -148,7 +170,7 @@ namespace TaxiTaxiWPF.TaxiData
             get { return Fahrten.Sum(p => p.KM ?? 0.0F); }
         }
 
-        [ObserveProperty(Dependency = "TourenAnfang")]
+        //[ObserveProperty(Dependency = "TourenAnfang")]
         public int TourenAnfang
         {
             get { return _tourenAnfang; }
@@ -159,7 +181,7 @@ namespace TaxiTaxiWPF.TaxiData
             }
         }
 
-        [ObserveProperty(Dependency = "TourenEnde")]
+        //[ObserveProperty(Dependency = "TourenEnde")]
         public int TourenEnde
         {
             get { return _tourenEnde; }
@@ -177,7 +199,7 @@ namespace TaxiTaxiWPF.TaxiData
             get { return TourenEnde - TourenAnfang; }
         }
 
-        [ObserveProperty(Dependency = "PreisAnfang")]
+        //[ObserveProperty(Dependency = "PreisAnfang")]
         public float PreisAnfang
         {
             get { return _preisAnfang; }
@@ -188,7 +210,7 @@ namespace TaxiTaxiWPF.TaxiData
             }
         }
 
-        [ObserveProperty(Dependency = "PreisEnde")]
+        //[ObserveProperty(Dependency = "PreisEnde")]
         public float PreisEnde
         {
             get { return _preisEnde; }
@@ -215,24 +237,24 @@ namespace TaxiTaxiWPF.TaxiData
         }
 
         [ObserveProperty(Dependency = "Fahrt.APES")]
-        public float RabattTotal
+        public float SummeOhneUhr
         {
             get { return Fahrten.Sum(p => p.APES ?? 0.0F); }
         }
 
         [ObserveProperty(Dependency = "PreisTotal")]
-        [ObserveProperty(Dependency = "RabattTotal")]
-        public float PreisNachRabatt
+        [ObserveProperty(Dependency = "SummeOhneUhr")]
+        public float PreisInklAPES
         {
-            get { return PreisTotal - RabattTotal; }
+            get { return PreisTotal + SummeOhneUhr; }
         }
 
-        [ObserveProperty(Dependency = "PreisNachRabatt")]
+        [ObserveProperty(Dependency = "PreisInklAPES")]
         [ObserveProperty(Dependency = "TourPricesSum")]
-        [ObserveProperty(Dependency = "RabattTotal")]
+        [ObserveProperty(Dependency = "SummeOhneUhr")]
         public float Preisdifferenz
         {
-            get { return (float)Math.Round(PreisNachRabatt - (TourPricesSum - RabattTotal), 2); }
+            get { return (float)Math.Round(PreisInklAPES - (TourPricesSum + SummeOhneUhr), 2); }
         }
 
         [ObserveProperty(Dependency = "Fahrt.Sonderausgabe")]
@@ -241,13 +263,20 @@ namespace TaxiTaxiWPF.TaxiData
         [ObserveProperty(Dependency = "Fahrt.APES")]
         public int TourCount
         {
-            get { return Fahrten.Count(p => !(p.Sonderausgabe) & p.Preis != null); }
+            get { return Fahrten.Count(p => p.Preis != null); }
         }
 
         [ObserveProperty(Dependency = "Fahrt.Bezahlt")]
         public float BargeldErhaltenOhneTip
         {
-            get { return Fahrten.Sum(p => p.Bezahlt); }
+            get
+            {
+                // lock (Fahrten)
+                //{
+                    float sum = Fahrten.Sum(p => p.Bezahlt);
+                    return sum;
+                //}
+            }
         }
 
         #endregion
@@ -262,6 +291,19 @@ namespace TaxiTaxiWPF.TaxiData
         public float AbzugRechnungsfahrten
         {
             get { return Fahrten.Where(f => f.Rechnungsfahrt).Sum(f => f.Preis ?? 0.0F); }
+        }
+
+        public void ReindexTours()
+        {
+            int uoIdx = 1;
+            foreach (var item in Fahrten.OrderBy(p => p.Index).ThenBy(p => p.SortOrder))
+            {
+                if (item.Index == 0)
+                {
+                    while (Fahrten.Any(p => p.Index != 0 && p.Index == uoIdx)) uoIdx++;
+                    item.Index = uoIdx;
+                }
+            }
         }
     }
 }

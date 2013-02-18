@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="TaxiTaxiWPF.TaxiControls.Arbeitszettel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:AbrechnungConverter="clr-namespace:TaxiTaxiWPF.AbrechnungConverter" mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid.Resources>
+            <Style TargetType="HeaderedContentControl">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="HeaderedContentControl">
+                            <StackPanel Orientation="Horizontal" 
+                                        VerticalAlignment="{TemplateBinding VerticalAlignment}" 
+                                        HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                                        Background="{TemplateBinding Background}">
+                                <ContentPresenter ContentSource="Header" />
+                                <ContentPresenter ContentSource="Content" />
+                            </StackPanel>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </Grid.Resources>
+
+        <StackPanel>
+            <HeaderedContentControl Header="Woche: " Content="{Binding Converter={AbrechnungConverter:Woche Auswahl=Nummer}}" VerticalAlignment="Top" HorizontalAlignment="Left" />
+            <HeaderedContentControl Header="Von: " Content="{Binding Converter={AbrechnungConverter:Woche Auswahl=Anfang}}" VerticalAlignment="Top" HorizontalAlignment="Left" />
+            <HeaderedContentControl Header="Bis: " Content="{Binding Converter={AbrechnungConverter:Woche Auswahl=Ende}}" VerticalAlignment="Top" HorizontalAlignment="Left" />
+        </StackPanel>
+    </Grid>
+</UserControl>

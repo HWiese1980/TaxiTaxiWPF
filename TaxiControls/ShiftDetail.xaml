@@ -6,11 +6,30 @@
              xmlns:ext="clr-namespace:Xceed.Wpf.Toolkit;assembly=WPFToolkit.Extended"
              xmlns:txctl="clr-namespace:TaxiTaxiWPF.TaxiControls"
              mc:Ignorable="d" 
-             d:DesignHeight="563" d:DesignWidth="679">
+             d:DesignHeight="719" d:DesignWidth="679">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </UserControl.Resources>
     <Grid>
+        <Grid.Resources>
+            <Style TargetType="FrameworkElement" x:Key="SichtbarWennFertig">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding AbrechnungFertig}" Value="True">
+                        <Setter Property="Visibility" Value="Visible" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+            <Style TargetType="FrameworkElement" x:Key="UnsichtbarWennFertig">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding AbrechnungFertig}" Value="True">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </Grid.Resources>
         <DockPanel>
             <DockPanel DockPanel.Dock="Top">
-                <TabControl Height="140" DockPanel.Dock="Top">
+                <TabControl Height="166" DockPanel.Dock="Top">
                     <TabItem Header="Abrechnung">
                         <StackPanel Orientation="Vertical">
                             <StackPanel Orientation="Horizontal">
@@ -23,15 +42,23 @@
                                     <Label Content="{Binding EigenerVerdienst}" ContentStringFormat="c" FontSize="16" FontWeight="Bold" />
                                 </StackPanel>
                             </StackPanel>
-                            <StackPanel Visibility="Collapsed" Orientation="Horizontal">
-                                <StackPanel Orientation="Vertical">
-                                    <Label Content="Ges. Sonderausg." />
-                                    <Label Content="{Binding SonderausgabenSumme}" ContentStringFormat="c" />
+                            <StackPanel Visibility="Visible" Orientation="Horizontal" Style="{StaticResource SichtbarWennFertig}">
+                                <StackPanel>
+                                    <Label Content="Von... bis..." />
+                                    <StackPanel Orientation="Horizontal">
+                                        <Label Content="{Binding Anfang}" ContentStringFormat="g" />
+                                        <Label Content="{Binding Ende}" ContentStringFormat="g" />
+                                    </StackPanel>
                                 </StackPanel>
+                                <StackPanel>
+                                    <Label Content="Stunden" />
+                                    <Label Content="{Binding Stunden}" />
+                                </StackPanel>
+                                
                             </StackPanel>
                         </StackPanel>
                     </TabItem>
-                    <TabItem Header="Daten">
+                    <TabItem Header="Daten" Style="{StaticResource UnsichtbarWennFertig}">
                         <StackPanel Orientation="Horizontal">
                             <StackPanel Orientation="Vertical">
                                 <Label Content="Von... bis" />
@@ -46,17 +73,43 @@
                             </StackPanel>
                         </StackPanel>
                     </TabItem>
-                    <TabItem Header="Geld">
-                        <StackPanel Orientation="Horizontal">
-                            <StackPanel>
-                                <Label Content="Vorher" />
-                                <TextBox Text="{Binding GeldVorher, StringFormat='c'}" />
-                            </StackPanel>
-                            <StackPanel>
-                                <Label Content="Nachher" />
-                                <TextBox Text="{Binding GeldNachher, StringFormat='c'}" />
-                            </StackPanel>
-                        </StackPanel>
+                    <TabItem Header="Geld" Style="{StaticResource UnsichtbarWennFertig}">
+                        <DockPanel>
+                            <WrapPanel Width="300">
+                                <StackPanel Margin="3">
+                                    <Label Content="Vorher" />
+                                    <TextBox Text="{Binding GeldVorher, StringFormat=c}" />
+                                    <Button Content="Vorschicht I" ToolTip="Von Vorschicht übernehmen" Click="VonVorschichtClick" Tag="1" />
+                                    <Button Content="Vorschicht II" ToolTip="Von Vorschicht nach Abzählen übernehmen" Click="VonVorschichtClick" Tag="2" />
+                                </StackPanel>
+                                <StackPanel Margin="3">
+                                    <Label Content="Nachher" />
+                                    <TextBox Text="{Binding GeldNachher, StringFormat=c}" />
+                                </StackPanel>
+                                <StackPanel Margin="3">
+                                    <Label Content="Gelieh. Wechselgeld" ToolTip="Geliehenes Wechselgeld" />
+                                    <TextBox Text="{Binding GeliehenesWechselgeld, StringFormat=c}" />
+                                </StackPanel>
+                            </WrapPanel>
+                            <HeaderedContentControl Margin="3" Header="Privatausgaben">
+                                <HeaderedContentControl.Template>
+                                    <ControlTemplate TargetType="{x:Type HeaderedContentControl}">
+                                        <StackPanel>
+                                            <Label Margin="16,6" Padding="0" Content="{TemplateBinding Header}" />
+                                            <ContentPresenter />
+                                        </StackPanel>
+                                    </ControlTemplate>
+                                </HeaderedContentControl.Template>
+                                <ScrollViewer Margin="2,0" MaxHeight="65" >
+                                    <DataGrid BorderBrush="DarkGray" Padding="2" BorderThickness="3" ItemsSource="{Binding Privatausgaben}" AutoGenerateColumns="False">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="Bemerkung" Binding="{Binding Bemerkung}" />
+                                            <DataGridTextColumn Header="Betrag" Binding="{Binding Wert, StringFormat=c}" />
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </ScrollViewer>
+                            </HeaderedContentControl>
+                        </DockPanel>
                     </TabItem>
                     <TabItem Header="Sonderausgaben" Visibility="Collapsed">
                         <Grid>
@@ -70,7 +123,7 @@
                     </TabItem>
                 </TabControl>
                 <Separator DockPanel.Dock="Top" Height="3" Margin="8" />
-                <ToolBarTray DockPanel.Dock="Top">
+                <ToolBarTray Style="{StaticResource UnsichtbarWennFertig}" DockPanel.Dock="Top">
                     <ToolBar>
                         <Button Click="Button_Click_1" ToolTip="Fahrzeug hinzufügen">
                             <Image Source="..\Images\1338809739_001_01.png" Width="16" />
@@ -79,15 +132,25 @@
                     </ToolBar>
                 </ToolBarTray>
                 <DataGrid ItemsSource="{Binding Fahrzeuge}" HeadersVisibility="Column" AutoGenerateColumns="False" DockPanel.Dock="Top" x:Name="selectedVehicle">
+                    <DataGrid.Style>
+                        <Style TargetType="DataGrid">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding AbrechnungFertig}" Value="True">
+                                    <Setter Property="CanUserAddRows" Value="False" />
+                                    <Setter Property="CanUserDeleteRows" Value="False" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.Style>
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding Nummer, StringFormat='g', UpdateSourceTrigger=LostFocus}" Header="Nr." />
                         <DataGridTextColumn Binding="{Binding TotalAnfang, StringFormat='f1', UpdateSourceTrigger=LostFocus}" Header="Total Anfang" />
-                        <DataGridTextColumn Binding="{Binding TotalEnde, StringFormat='f1', UpdateSourceTrigger=LostFocus}" Header="Total Ende" />
                         <DataGridTextColumn Binding="{Binding BesetztAnfang, StringFormat='f1', UpdateSourceTrigger=LostFocus}" Header="Besetzt Anfang" />
-                        <DataGridTextColumn Binding="{Binding BesetztEnde, StringFormat='f1', UpdateSourceTrigger=LostFocus}" Header="Besetzt Ende" />
                         <DataGridTextColumn Binding="{Binding TourenAnfang, StringFormat='g', UpdateSourceTrigger=LostFocus}" Header="Touren Anfang" />
-                        <DataGridTextColumn Binding="{Binding TourenEnde, StringFormat='g', UpdateSourceTrigger=LostFocus}" Header="Touren Ende" />
                         <DataGridTextColumn Binding="{Binding PreisAnfang, StringFormat='c', UpdateSourceTrigger=LostFocus}" Header="Preis Anfang" />
+                        <DataGridTextColumn Binding="{Binding TotalEnde, StringFormat='f1', UpdateSourceTrigger=LostFocus}" Header="Total Ende" />
+                        <DataGridTextColumn Binding="{Binding BesetztEnde, StringFormat='f1', UpdateSourceTrigger=LostFocus}" Header="Besetzt Ende" />
+                        <DataGridTextColumn Binding="{Binding TourenEnde, StringFormat='g', UpdateSourceTrigger=LostFocus}" Header="Touren Ende" />
                         <DataGridTextColumn Binding="{Binding PreisEnde, StringFormat='c', UpdateSourceTrigger=LostFocus}" Header="Preis Ende" />
                     </DataGrid.Columns>
                 </DataGrid>
